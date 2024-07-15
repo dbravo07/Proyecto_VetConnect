@@ -76,7 +76,7 @@ Este proyecto está licenciado bajo la Licencia MIT. Vea el archivo [LICENSE](LI
 
 ---
 
-**Desarrollado por [Tu Nombre o Tu Empresa]**
+**Desarrollado por [Dennis Bravo Muñoz]**
 ```
 
 Este README proporciona una visión general del proyecto VetConnect, describe sus características principales, tecnologías utilizadas y ofrece instrucciones detalladas para la instalación y configuración del proyecto en un entorno de desarrollo local.
