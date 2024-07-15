@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar Datos</title>
+    <!-- Enlaces a Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Enlace a los estilos del calendario -->
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f77d509de8.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+
+</head>
+<body class="bg-light bg-gradient">
+    <!-- Barra Superior -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <i  class="fa-solid fa-otter fa-2x me-2" 
+                style="margin-left:-10px;">
+            </i>
+            <a  class="navbar-brand fs-3" 
+                href="/interfaz" 
+                >Inicio
+            </a>
+        </div>    
+    </div>
+</nav>
+
+    
+  
+    <!-- Contenido principal -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Botón con icono -->
+            <button class="btn btn-primary d-md-none rounded-0" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#sidebarCollapse" 
+                    aria-expanded="false" 
+                    aria-controls="sidebarCollapse">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-list"></i> 
+                        Menu
+                    </div>
+            </button>
+    
+            <!-- Menu -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" id="sidebarCollapse">
+
+                <!-- Contenido Menu -->
+
+                <div class="position-sticky h-100">
+                    <ul class="nav flex-column flex-md-row flex-lg-column flex-wrap">
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-dark border-bottom" href="#ingresar-mascota" style="white-space: nowrap";>
+                                <i class="bi bi-dog me-2"></i> Ingresar Mascota
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-dark border-bottom" href="#solicitar-cita" style="white-space: nowrap;">
+                                <i class="bi bi-calendar-plus me-2"></i> Solicitar Cita
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-dark border-bottom" href="#proximas-citas" style="white-space: nowrap;">
+                                <i class="bi bi-calendar-event me-2"></i> Próximas Citas
+                            </a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-dark border-bottom" href="#ver-mascotas" style="white-space: nowrap;">
+                                <i class="bi bi-journal-text me-2"></i> Ver Mascotas
+                            </a>
+                        </li>
+                        
+                         
+                          <!--Logout -->
+                         <li class="nav-item w-100">
+                             <a class="nav-link text-dark" href="/cerrar_sesion/" style="white-space: nowrap;">
+                             <i class="bi bi-person me-2"></i>Logout
+                             </a>
+                        </li>
+                    </ul>
+                    <hr class="text-dark m-0">
+                </div>
+            </nav>
+        
+        
+<!-- Contenido central (posicion)-->
+<main   class=" d-flex justify-content-sticky" 
+        class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="mainContent"
+    >
+
+<!-- Formulario para ingresar datos de la mascota -->
+<div id="ingresarMascotaForm" style="display: none;">
+    <h2>Ingresar Datos de la Mascota</h2>
+
+<!-- Mensaje de confirmación (esto no funciona aun)-->
+    {% if mascota_guardada %}
+    <div id="mensajeConfirmacion" class="alert alert-success" style="display: none;">
+        La mascota ha sido guardada correctamente.
+    </div>
+    {% endif %}
+    
+    <!-- Formulario de ingreso de mascota -->
+    <form method="POST" action="/actualizar/{{ mascota.id }}/"> <!-- Utiliza mascota.id en lugar de id -->
+        {% csrf_token %}
+        <!-- Campos del formulario de edición de mascota -->
+        <div class="mb-3">
+            <label for="nombreMascota" class="form-label">Nombre</label>
+            <input type="text" class="form-control form-control-sm" id="nombre" name="nombre" value="{{ mascota.nombre }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="especieMascota" class="form-label">Especie</label>
+            <input type="text" class="form-control form-control-sm" id="especieMascota" name="especie" value="{{ mascota.especie }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="razaMascota" class="form-label">Raza</label>
+            <input type="text" class="form-control form-control-sm" id="razaMascota" name="raza" value="{{ mascota.raza }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="sexoMascota" class="form-label">Sexo</label>
+            <select class="form-select form-select-sm" id="sexoMascota" name="sexo" required>
+                <option value="macho" {% if mascota.sexo == 'macho' %} selected {% endif %}>Macho</option>
+                <option value="hembra" {% if mascota.sexo == 'hembra' %} selected {% endif %}>Hembra</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="edadMascota" class="form-label">Edad</label>
+            <input type="number" class="form-control form-control-sm" id="edadMascota" name="edad" value="{{ mascota.edad }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="pesoMascota" class="form-label">Peso (Kg)</label>
+            <input type="number" class="form-control form-control-sm" id="pesoMascota" name="peso" value="{{ mascota.peso }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="guardarMascotaBtn">Guardar</button>
+        <a href="/interfaz/"  class="btn btn-danger">Volver</a>
+    </form>
+</div>
+
+                
+                <!-- Formulario para solicitar cita veterinaria -->
+<div id="solicitarCitaForm" style="display: none;">
+    <h2>Solicitar Cita Veterinaria</h2>
+    <form action="/guardar_cita/" method="post">
+        {% csrf_token %}
+        <!-- Campo oculto para enviar el cliente_id -->
+        <input type="hidden" name="cliente_id" value="{{ cliente.id }}">
+        
+        <!-- Campos del formulario de solicitud de cita veterinaria -->
+        <div class="mb-3">
+            <label for="cliente" class="form-label"><h3>Cliente: {{ cliente.nombre }}</h3></label>
+            <input type="text" class="form-control form-control-sm" readonly id="cliente" name="cliente_id" value="{{ cliente.id }}">
+        </div>
+        <div class="mb-3">
+            <label for="mascota" class="form-label">Mascota</label>
+            <select class="form-select form-select-sm" id="mascota" name="mascota">
+                {% for m in mascotas %}
+                <option value="{{ m.id }}"> {{ m.nombre }} </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3 mt-5">
+            <label for="medico" class="form-label">Médico</label>
+            <select class="form-select form-select-sm" id="medico" name="medico">
+                <!-- Opciones generadas dinámicamente -->
+                {% for vet in veterinarios %}
+                <option value="{{ vet.id }}"> {{ vet.nombre }} | {{ vet.especialidad }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha</label>
+            <input type="text" class="form-control form-control-sm" name="fecha" id="fecha" placeholder="dd/mm/aa" required>
+        </div>
+        <div class="mb-3">
+            <label for="hora" class="form-label">Hora</label>
+            <input type="text" class="form-control form-control-sm"name="hora" id="hora" placeholder="hh:mm" required>
+        </div>
+        <div class="mb-3">
+            <label for="motivo" class="form-label">Motivo</label>
+            <textarea class="form-control" name="motivo" id="motivo" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Solicitar Cita</button>
+    </form>
+</div>
+
+                <!-- Calendario para mostrar próximas citas -->
+                <div id="proximasCitas" style="display: none;">
+                    <h2>Próximas Citas</h2>
+                    <div id="calendar"></div>
+
+                    <h2>Citas Registradas</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Mascota</th>
+                                <th>Médico</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Motivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cita in citas %}
+                                <tr>
+                                    <td>{{ cita.cliente.nombre }}</td>
+                                    <td>{{ cita.mascota.nombre }}</td>
+                                    <td>{{ cita.medico.nombre }}</td>
+                                    <td>{{ cita.fecha }}</td>
+                                    <td>{{ cita.hora }}</td>
+                                    <td>{{ cita.motivo }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6">No hay citas registradas.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                    <p id="noCitasMessage" style="display: none;">No tienes citas programadas.</p>
+                </div>
+
+
+
+
+                <!-- Tabla para mostrar mascotas -->
+                <div id="verMascotas" style="display: none;">
+                    <h2>Ver Mascotas</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Especie</th>
+                                <th scope="col">Raza</th>
+                                <th scope="col">Sexo</th>
+                                <th scope="col">Edad</th>
+                                <th scope="col">Peso</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Aquí se cargarán las mascotas desde la base de datos -->
+                            {% for m1 in mascotas %}
+                            <tr>
+                                <th scope="col">{{m1.nombre}}</th>
+                                <th scope="col">{{m1.especie}}</th>
+                                <th scope="col">{{m1.raza}}</th>
+                                <th scope="col">{{m1.sexo}}</th>
+                                <th scope="col">{{m1.edad}}</th>
+                                <th scope="col">{{m1.peso}}</th>
+                                <th scope="col">  <a href="/actualizar/{{m1.id}}" class="btn btn-warning"><i class="fa-regular fa-pen-to-square"></i></a>  <a href="/eliminar/{{m1.id}}/" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></th>
+                            </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Enlaces a Bootstrap JavaScript y Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <!-- Enlace al script de Flatpickr (calendario) -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Enlace al script de FullCalendar -->
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@5.10.1/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@5.10.1/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@5.10.1/main.min.js"></script>
+
+    <!-- Script JavaScript para mostrar los formularios y configurar FullCalendar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Obtiene el enlace "Ingresar Mascota"
+            const ingresarMascotaLink = document.querySelector('a[href="#ingresar-mascota"]');
+            // Obtiene el enlace "Solicitar Cita"
+            const solicitarCitaLink = document.querySelector('a[href="#solicitar-cita"]');
+            // Obtiene el enlace "Ver Próximas Citas"
+            const verProximasCitasLink = document.querySelector('a[href="#proximas-citas"]');
+            // Obtiene el enlace "Ver Mascotas"
+            const verMascotasLink = document.querySelector('a[href="#ver-mascotas"]');
+            
+            // Obtiene el área central y los formularios
+            const mainContent = document.getElementById('mainContent');
+            const ingresarMascotaForm = document.getElementById('ingresarMascotaForm');
+            const solicitarCitaForm = document.getElementById('solicitarCitaForm');
+            const proximasCitasDiv = document.getElementById('proximasCitas');
+            const verMascotasDiv = document.getElementById('verMascotas');
+            const noCitasMessage = document.getElementById('noCitasMessage');
+            
+            // Agrega un event listener para el clic en el enlace "Ingresar Mascota"
+            ingresarMascotaLink.addEventListener('click', function (event) {
+                event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+                
+                // Oculta el formulario de solicitud de cita si está visible
+                if (solicitarCitaForm.style.display === 'block') {
+                    solicitarCitaForm.style.display = 'none';
+                }
+                
+                // Oculta el div de próximas citas si está visible
+                if (proximasCitasDiv.style.display === 'block') {
+                    proximasCitasDiv.style.display = 'none';
+                }
+
+                // Oculta la tabla de mascotas si está visible
+                if (verMascotasDiv.style.display === 'block') {
+                    verMascotasDiv.style.display = 'none';
+                }
+                
+                // Muestra el formulario de ingreso de mascota
+                ingresarMascotaForm.style.display = 'block';
+                
+                // Puedes agregar más acciones aquí, como cargar datos iniciales, etc.
+            });
+            
+            // Agrega un event listener para el clic en el enlace "Solicitar Cita"
+            solicitarCitaLink.addEventListener('click', function (event) {
+                event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+                
+                // Oculta el formulario de ingreso de mascota si está visible
+                if (ingresarMascotaForm.style.display === 'block') {
+                    ingresarMascotaForm.style.display = 'none';
+                }
+                
+                // Oculta el div de próximas citas si está visible
+                if (proximasCitasDiv.style.display === 'block') {
+                    proximasCitasDiv.style.display = 'none';
+                }
+
+                // Oculta la tabla de mascotas si está visible
+                if (verMascotasDiv.style.display === 'block') {
+                    verMascotasDiv.style.display = 'none';
+                }
+                
+                // Muestra el formulario de solicitud de cita
+                solicitarCitaForm.style.display = 'block';
+                
+                // Puedes agregar más acciones aquí, como cargar datos iniciales, etc.
+            });
+
+            // Agrega un event listener para el clic en el enlace "Ver Próximas Citas"
+            verProximasCitasLink.addEventListener('click', function (event) {
+                event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+                
+                // Oculta el formulario de ingreso de mascota si está visible
+                if (ingresarMascotaForm.style.display === 'block') {
+                    ingresarMascotaForm.style.display = 'none';
+                }
+                
+                // Oculta el formulario de solicitud de cita si está visible
+                if (solicitarCitaForm.style.display === 'block') {
+                    solicitarCitaForm.style.display = 'none';
+                }
+
+                // Oculta la tabla de mascotas si está visible
+                if (verMascotasDiv.style.display === 'block') {
+                    verMascotasDiv.style.display = 'none';
+                }
+                
+                // Muestra el div de próximas citas y verifica si hay citas programadas
+                proximasCitasDiv.style.display = 'block';
+                if (noCitasMessage.style.display === 'block') {
+                    noCitasMessage.style.display = 'none';
+                } else {
+                    // Puedes agregar aquí la lógica para mostrar las próximas citas usando FullCalendar
+                    // En este ejemplo, se muestra el mensaje "No tienes citas programadas"
+                    noCitasMessage.style.display = 'block';
+                }
+            });
+
+            // Agrega un event listener para el clic en el enlace "Ver Mascotas"
+            verMascotasLink.addEventListener('click', function (event) {
+                event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+                
+                // Oculta el formulario de ingreso de mascota si está visible
+                if (ingresarMascotaForm.style.display === 'block') {
+                    ingresarMascotaForm.style.display = 'none';
+                }
+                
+                // Oculta el formulario de solicitud de cita si está visible
+                if (solicitarCitaForm.style.display === 'block') {
+                    solicitarCitaForm.style.display = 'none';
+                }
+
+                // Oculta el div de próximas citas si está visible
+                if (proximasCitasDiv.style.display === 'block') {
+                    proximasCitasDiv.style.display = 'none';
+                }
+                
+                // Muestra la tabla de mascotas
+                verMascotasDiv.style.display = 'block';
+                
+                // Puedes agregar más acciones aquí, como cargar datos iniciales, etc.
+            });
+            
+            // También ocultamos ambos formularios al cargar la página
+            ingresarMascotaForm.style.display = 'none';
+            solicitarCitaForm.style.display = 'none';
+            proximasCitasDiv.style.display = 'none';
+            verMascotasDiv.style.display = 'none';
+
+            // Configurar Flatpickr para el campo de fecha
+            flatpickr("#fecha", {
+                altInput: true,
+                altFormat: "F j, Y",
+                dateFormat: "y/m/d",
+            });
+        });
+    </script>
+</body>
+</html>
